@@ -37,6 +37,7 @@ dependencies {
     compile 'com.microsoft.azure:azure-mobile-android:3.4.0@aar'
     compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.microsoft.azure.android:azure-storage-android:0.8.0@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'
