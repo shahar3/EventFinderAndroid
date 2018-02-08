@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,14 +25,27 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.shaha.eventfinderandroid.Utils.ImageManager;
+import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +55,7 @@ import java.util.GregorianCalendar;
 public class AddEventActivity extends AppCompatActivity{
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int RC_PICK_IMAGE = 2;
+    private static final int SELECT_IMAGE = 3 ;
     private EditText timeFromEditText, timeUntilEditText;
     private boolean fromBtnClicked;
     private String[] options;
@@ -51,6 +69,7 @@ public class AddEventActivity extends AppCompatActivity{
     DatePickerDialog.OnDateSetListener from_dateListener,to_dateListener;
     private TimePickerDialog.OnTimeSetListener from_timeListener,to_timeListener;
     private Date fromDate,toDate;
+    private Uri selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +96,22 @@ public class AddEventActivity extends AppCompatActivity{
     }
 
     private void setUpEventImgListener() {
-        final ImageView addEventImg = (ImageView) findViewById(R.id.add_event_img);
+        addEventImg = (ImageView) findViewById(R.id.add_event_img);
         //on click open the gallery and choose a photo from there
         addEventImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO: open gallery and choose a picture
+                openGallery();
             }
         });
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
     }
 
     private void openDatePicker(DatePickerDialog.OnDateSetListener listener) {
@@ -209,10 +236,16 @@ public class AddEventActivity extends AppCompatActivity{
         addEventFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                UploadImage();
                 //AddEventToDataBase(eventData);
             }
         });
+    }
+
+    private void UploadImage() {
+        String imageName = ((EditText) findViewById(R.id.add_event_event_name)).getText().toString();
+        UploadImageAsyncTask task = new UploadImageAsyncTask(imageName);
+        task.execute(selectedImage);
     }
 
     @Override
@@ -227,7 +260,40 @@ public class AddEventActivity extends AppCompatActivity{
                 place = PlacePicker.getPlace(AddEventActivity.this, data);
                 updateLocation(place);
             }
+            else if(requestCode == SELECT_IMAGE)
+            {
+                if (data != null)
+                {
+                    selectedImage = data.getData();
+                    addEventImg.setImageURI(selectedImage);
+                }
+            }
         }
+    }
+    private class UploadImageAsyncTask extends AsyncTask<Uri, Void,Integer>{
+        String _imageName;
+        UploadImageAsyncTask(String imageName)
+        {
+            _imageName = imageName;
+        }
+
+        @Override
+        protected Integer doInBackground(Uri... uri) {
+            try {
+                final InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                final int imageLength = imageStream.available();
+                ImageManager.UploadImage(imageStream, imageLength,_imageName);
+            }
+            catch(Exception ex) {
+                //Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            return 1;
+        }
+        @Override
+        protected void onPostExecute(Integer integer) {
+
+        }
+
     }
 
     private void updateLocation(Place place) {
