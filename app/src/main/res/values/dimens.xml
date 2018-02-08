@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="btn_padding">28dp</dimen>
+    <dimen name="btn_width">128dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="login_margin">12dp</dimen>
+    <dimen name="add_event_margin">8dp</dimen>
+    <dimen name="add_event_img_size_w">72dp</dimen>
+    <dimen name="add_event_img_size_h">72dp</dimen>
+    <dimen name="add_event_img_padding">8dp</dimen>
+    <dimen name="add_event_txt_2_img_margin">12dp</dimen>
+    <dimen name="add_event_address">22sp</dimen>
+    <dimen name="add_event_line_margin">12dp</dimen>
+    <dimen name="add_event_submit">50dp</dimen>
+    <dimen name="top_margin">12dp</dimen>
+</resources>

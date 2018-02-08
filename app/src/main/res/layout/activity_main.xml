@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.shaha.eventfinderandroid.MainActivity">
+
+    <ImageView
+        android:src="@drawable/event_finder_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="256dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/main_login_btn"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/login_str"
+                android:layout_width="@dimen/btn_width"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/main_register_btn"
+                android:text="@string/register_str"
+                android:layout_width="@dimen/btn_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
