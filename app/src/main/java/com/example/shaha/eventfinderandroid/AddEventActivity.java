@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +28,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +37,7 @@ import java.util.GregorianCalendar;
 public class AddEventActivity extends AppCompatActivity{
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int RC_PICK_IMAGE = 2;
-    private EditText timeEditText;
+    private EditText timeFromEditText, timeUntilEditText;
     private boolean fromBtnClicked;
     private String[] options;
     private Date startTime, endTime;
@@ -57,6 +59,9 @@ public class AddEventActivity extends AppCompatActivity{
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Events");
 
+        timeFromEditText = (EditText)findViewById(R.id.add_event_time_from_edit_text);
+        timeUntilEditText = (EditText)findViewById(R.id.add_event_time_until_edit_text);
+
         setupListeners();
     }
 
@@ -64,9 +69,21 @@ public class AddEventActivity extends AppCompatActivity{
         //setUpDateBtnListener();
         setUpClockBtnListener();
         setUpSpinner();
-        //setUpEventImgListener();
+        setDateAndTimeListener();
+        setUpEventImgListener();
         setUpAddEventBtnListener();
         setUpPickLocationBtnListener();
+    }
+
+    private void setUpEventImgListener() {
+        final ImageView addEventImg = (ImageView) findViewById(R.id.add_event_img);
+        //on click open the gallery and choose a photo from there
+        addEventImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: open gallery and choose a picture
+            }
+        });
     }
 
     private void openDatePicker(DatePickerDialog.OnDateSetListener listener) {
@@ -128,7 +145,7 @@ public class AddEventActivity extends AppCompatActivity{
     }
 
     private void setUpSpinner() {
-        options = new String[]{"Sport","Trip","Misc"};
+        options = new String[]{"Sport","Trip","Misc","Party"};
         Spinner eventTypeSpinner = (Spinner) findViewById(R.id.add_event_type_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, options);
         eventTypeSpinner.setAdapter(adapter);
@@ -164,21 +181,15 @@ public class AddEventActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 fromBtnClicked = true;
-                timeEditText = (EditText) findViewById(R.id.add_event_time_from_edit_text);
                 //first pick the date
                 openDatePicker(from_dateListener);
-                //after pick the time
-                openTimePicker(from_timeListener);
             }
         });
         timeUntilBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fromBtnClicked = false;
-                timeEditText = (EditText) findViewById(R.id.add_event_time_until_edit_text);
                 openDatePicker(to_dateListener);
-                //after pick the time
-                openTimePicker(to_timeListener);
             }
         });
     }
@@ -189,6 +200,7 @@ public class AddEventActivity extends AppCompatActivity{
         int minute = now.get(Calendar.MINUTE);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(AddEventActivity.this,listener,hour,minute,true);
+        timePickerDialog.show();
     }
 
     private void setUpAddEventBtnListener() {
@@ -231,6 +243,8 @@ public class AddEventActivity extends AppCompatActivity{
                 dayFinal = i2;
 
                 fromDate = new GregorianCalendar(yearFinal,monthFinal,dayFinal).getTime();
+                //after pick the time
+                openTimePicker(from_timeListener);
             }
         };
 
@@ -240,6 +254,14 @@ public class AddEventActivity extends AppCompatActivity{
                 int hour = i;
                 int minute = i1;
 
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(fromDate);
+                cal.add(Calendar.HOUR_OF_DAY,hour);
+                cal.add(Calendar.MINUTE,minute);
+                fromDate = cal.getTime();
+                SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy HH:mm:00.00");
+                Toast.makeText(AddEventActivity.this,ft.format(fromDate).toString(),Toast.LENGTH_SHORT).show();
+                timeFromEditText.setText(ft.format(fromDate));
             }
         };
 
@@ -251,6 +273,8 @@ public class AddEventActivity extends AppCompatActivity{
                 dayFinal = i2;
 
                 toDate = new GregorianCalendar(yearFinal,monthFinal,dayFinal).getTime();
+                //after pick the time
+                openTimePicker(from_timeListener);
             }
         };
 
