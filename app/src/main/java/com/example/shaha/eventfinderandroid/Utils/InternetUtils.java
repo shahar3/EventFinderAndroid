@@ -134,17 +134,6 @@ public class InternetUtils {
         }
     }
 
-    public static ArrayList<MyEvent> getEvents() {
-        ArrayList<MyEvent> events = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            String eventName = "event " + i;
-            String description = "description";
-            MyEvent event = new MyEvent(eventName, "", "", description, i, 10.1, 10.3);
-            events.add(event);
-        }
-        return events;
-    }
-
     public static boolean joinEvent(int eventId,int userID){
         try{
             URL url = createURl(baseUrl+"events/"+eventId+"/"+userID);

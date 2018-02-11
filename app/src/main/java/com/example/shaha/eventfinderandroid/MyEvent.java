@@ -3,6 +3,8 @@ package com.example.shaha.eventfinderandroid;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.shaha.eventfinderandroid.Utils.EventType;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,6 +20,7 @@ public class MyEvent implements Parcelable{
     private int userId;
     private double longtitude;
     private double latitude;
+    private EventType type;
 
     public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude){
         this.setEventName(eventName);
@@ -41,6 +44,7 @@ public class MyEvent implements Parcelable{
         latitude = in.readDouble();
         startTime = in.readString();
         endTime = in.readString();
+        type = EventType.values()[in.readInt()]; //get the enum type
     }
 
     public static final Creator<MyEvent> CREATOR = new Creator<MyEvent>() {
@@ -54,6 +58,14 @@ public class MyEvent implements Parcelable{
             return new MyEvent[size];
         }
     };
+
+    public EventType getType() {
+        return type;
+    }
+
+    public void setType(EventType type) {
+        this.type = type;
+    }
 
     public String getEventName() {
         return eventName;
@@ -125,5 +137,6 @@ public class MyEvent implements Parcelable{
         parcel.writeDouble(latitude);
         parcel.writeString(startTime);
         parcel.writeString(endTime);
+        parcel.writeInt(type.getValue());
     }
 }

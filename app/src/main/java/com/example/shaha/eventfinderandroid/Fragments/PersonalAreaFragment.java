@@ -75,6 +75,7 @@ public class PersonalAreaFragment extends Fragment {
             }
         });
 
+        //get all the current user events
         EventsAsyncTask task = new EventsAsyncTask();
         task.execute();
 
@@ -92,6 +93,8 @@ public class PersonalAreaFragment extends Fragment {
         @Override
         protected void onPostExecute(List<MyEvent> eventsList) {
             super.onPostExecute(events);
+
+            //update the list view with the user events
             mAdapter.clear();
             mAdapter.addAll(eventsList);
             mAdapter.notifyDataSetChanged();

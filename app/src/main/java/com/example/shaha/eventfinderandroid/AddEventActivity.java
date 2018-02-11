@@ -52,10 +52,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class AddEventActivity extends AppCompatActivity{
+public class AddEventActivity extends AppCompatActivity {
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int RC_PICK_IMAGE = 2;
-    private static final int SELECT_IMAGE = 3 ;
+    private static final int SELECT_IMAGE = 3;
     private EditText timeFromEditText, timeUntilEditText;
     private boolean fromBtnClicked;
     private String[] options;
@@ -66,9 +66,9 @@ public class AddEventActivity extends AppCompatActivity{
     private Place place;
     private int day, month, year;
     private int dayFinal, monthFinal, yearFinal;
-    DatePickerDialog.OnDateSetListener from_dateListener,to_dateListener;
-    private TimePickerDialog.OnTimeSetListener from_timeListener,to_timeListener;
-    private Date fromDate,toDate;
+    DatePickerDialog.OnDateSetListener from_dateListener, to_dateListener;
+    private TimePickerDialog.OnTimeSetListener from_timeListener, to_timeListener;
+    private Date fromDate, toDate;
     private Uri selectedImage;
 
     @Override
@@ -79,14 +79,13 @@ public class AddEventActivity extends AppCompatActivity{
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("Events");
 
-        timeFromEditText = (EditText)findViewById(R.id.add_event_time_from_edit_text);
-        timeUntilEditText = (EditText)findViewById(R.id.add_event_time_until_edit_text);
+        timeFromEditText = (EditText) findViewById(R.id.add_event_time_from_edit_text);
+        timeUntilEditText = (EditText) findViewById(R.id.add_event_time_until_edit_text);
 
         setupListeners();
     }
 
     private void setupListeners() {
-        //setUpDateBtnListener();
         setUpClockBtnListener();
         setUpSpinner();
         setDateAndTimeListener();
@@ -111,7 +110,7 @@ public class AddEventActivity extends AppCompatActivity{
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
     }
 
     private void openDatePicker(DatePickerDialog.OnDateSetListener listener) {
@@ -120,19 +119,8 @@ public class AddEventActivity extends AppCompatActivity{
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this,listener,year,month,day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventActivity.this, listener, year, month, day);
         datePickerDialog.show();
-    }
-
-    private void AddEventToDataBase(ArrayList<Object> eventData) {
-        /**
-         * change null at end of new Mepo event to current user
-         */
-        DatabaseReference pushReference = mDatabaseReference.push();
-        MyEvent newEvent = new MyEvent(eventData,pushReference.getKey());
-        pushReference.setValue(newEvent);
-        Toast.makeText(AddEventActivity.this, "Event added go have fun", Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     private ArrayList<Object> getEventInfo() {
@@ -152,6 +140,10 @@ public class AddEventActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Check if all the required fields aren't empty
+     * @return
+     */
     private boolean isValid() {
         if (((EditText) findViewById(R.id.add_event_event_name)).getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Event name is required", Toast.LENGTH_SHORT).show();
@@ -173,7 +165,7 @@ public class AddEventActivity extends AppCompatActivity{
     }
 
     private void setUpSpinner() {
-        options = new String[]{"Sport","Trip","Misc","Party"};
+        options = new String[]{"Sport", "Carpool", "Sale", "Party", "Bar sale", "Misc"};
         Spinner eventTypeSpinner = (Spinner) findViewById(R.id.add_event_type_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, options);
         eventTypeSpinner.setAdapter(adapter);
@@ -227,7 +219,7 @@ public class AddEventActivity extends AppCompatActivity{
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int minute = now.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(AddEventActivity.this,listener,hour,minute,true);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddEventActivity.this, listener, hour, minute, true);
         timePickerDialog.show();
     }
 
@@ -259,21 +251,19 @@ public class AddEventActivity extends AppCompatActivity{
             } else if (requestCode == PLACE_PICKER_REQUEST) {
                 place = PlacePicker.getPlace(AddEventActivity.this, data);
                 updateLocation(place);
-            }
-            else if(requestCode == SELECT_IMAGE)
-            {
-                if (data != null)
-                {
+            } else if (requestCode == SELECT_IMAGE) {
+                if (data != null) {
                     selectedImage = data.getData();
                     addEventImg.setImageURI(selectedImage);
                 }
             }
         }
     }
-    private class UploadImageAsyncTask extends AsyncTask<Uri, Void,Integer>{
+
+    private class UploadImageAsyncTask extends AsyncTask<Uri, Void, Integer> {
         String _imageName;
-        UploadImageAsyncTask(String imageName)
-        {
+
+        UploadImageAsyncTask(String imageName) {
             _imageName = imageName;
         }
 
@@ -282,13 +272,13 @@ public class AddEventActivity extends AppCompatActivity{
             try {
                 final InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                 final int imageLength = imageStream.available();
-                ImageManager.UploadImage(imageStream, imageLength,_imageName);
-            }
-            catch(Exception ex) {
+                ImageManager.UploadImage(imageStream, imageLength, _imageName);
+            } catch (Exception ex) {
                 //Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
             }
             return 1;
         }
+
         @Override
         protected void onPostExecute(Integer integer) {
 
@@ -301,7 +291,7 @@ public class AddEventActivity extends AppCompatActivity{
         placeAddressEditText.setText(place.getAddress());
     }
 
-    public void setDateAndTimeListener(){
+    public void setDateAndTimeListener() {
         from_dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -309,7 +299,7 @@ public class AddEventActivity extends AppCompatActivity{
                 monthFinal = i1;
                 dayFinal = i2;
 
-                fromDate = new GregorianCalendar(yearFinal,monthFinal,dayFinal).getTime();
+                fromDate = new GregorianCalendar(yearFinal, monthFinal, dayFinal).getTime();
                 //after pick the time
                 openTimePicker(from_timeListener);
             }
@@ -323,11 +313,11 @@ public class AddEventActivity extends AppCompatActivity{
 
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(fromDate);
-                cal.add(Calendar.HOUR_OF_DAY,hour);
-                cal.add(Calendar.MINUTE,minute);
+                cal.add(Calendar.HOUR_OF_DAY, hour);
+                cal.add(Calendar.MINUTE, minute);
                 fromDate = cal.getTime();
-                SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy HH:mm:00.00");
-                Toast.makeText(AddEventActivity.this,ft.format(fromDate).toString(),Toast.LENGTH_SHORT).show();
+                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy HH:mm:00.00");
+                Toast.makeText(AddEventActivity.this, ft.format(fromDate).toString(), Toast.LENGTH_SHORT).show();
                 timeFromEditText.setText(ft.format(fromDate));
             }
         };
@@ -339,7 +329,7 @@ public class AddEventActivity extends AppCompatActivity{
                 monthFinal = i1;
                 dayFinal = i2;
 
-                toDate = new GregorianCalendar(yearFinal,monthFinal,dayFinal).getTime();
+                toDate = new GregorianCalendar(yearFinal, monthFinal, dayFinal).getTime();
                 //after pick the time
                 openTimePicker(from_timeListener);
             }
@@ -351,7 +341,14 @@ public class AddEventActivity extends AppCompatActivity{
                 int hour = i;
                 int minute = i1;
 
-                //toDate.setTime();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(fromDate);
+                cal.add(Calendar.HOUR_OF_DAY, hour);
+                cal.add(Calendar.MINUTE, minute);
+                fromDate = cal.getTime();
+                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy HH:mm:00.00");
+                Toast.makeText(AddEventActivity.this, ft.format(fromDate).toString(), Toast.LENGTH_SHORT).show();
+                timeUntilEditText.setText(ft.format(fromDate));
             }
         };
     }
