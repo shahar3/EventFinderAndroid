@@ -29,7 +29,7 @@ public class EventsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new UpcomingEventsFragment();
             case 2:
-                return new LocalEventsFragment();
+                //return new LocalEventsFragment();
             default:
                 return new PersonalAreaFragment();
         }

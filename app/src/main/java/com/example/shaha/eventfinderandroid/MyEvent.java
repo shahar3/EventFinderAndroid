@@ -43,7 +43,7 @@ public class MyEvent implements Parcelable{
         latitude = in.readDouble();
         startTime = in.readString();
         endTime = in.readString();
-        type = EventType.values()[in.readInt()]; //get the enum type
+        //type = EventType.values()[in.readInt()]; //get the enum type
         eventID = in.readInt();
     }
 
@@ -145,7 +145,7 @@ public class MyEvent implements Parcelable{
         parcel.writeDouble(latitude);
         parcel.writeString(startTime);
         parcel.writeString(endTime);
-        parcel.writeInt(type.getValue());
+        //parcel.writeInt(type.getValue());
         parcel.writeInt(eventID);
     }
 

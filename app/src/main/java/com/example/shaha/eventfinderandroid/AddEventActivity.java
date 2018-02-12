@@ -57,7 +57,9 @@ public class AddEventActivity extends AppCompatActivity {
     private static final int RC_PICK_IMAGE = 2;
     private static final int SELECT_IMAGE = 3;
     private EditText timeFromEditText, timeUntilEditText;
+    private boolean fromBtnClicked;
     private String[] options;
+    private Date startTime, endTime;
     private ImageView addEventImg;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -68,7 +70,6 @@ public class AddEventActivity extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener from_timeListener, to_timeListener;
     private Date fromDate, toDate;
     private Uri selectedImage;
-    private String eventName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,12 +123,29 @@ public class AddEventActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    private ArrayList<Object> getEventInfo() {
+        ArrayList<Object> eventData = new ArrayList<>();
+        //check if all required fields are not empty
+        if (isValid()) {
+            eventData.add(((EditText) findViewById(R.id.add_event_event_name)).getText().toString());
+            eventData.add(place.getLatLng().latitude);
+            eventData.add(place.getLatLng().longitude);
+            eventData.add(((Spinner) findViewById(R.id.add_event_type_spinner)).getSelectedItem().toString());
+            eventData.add(startTime);
+            eventData.add(endTime);
+            eventData.add(EventsMainActivity.getCurrentUser());
+            return eventData;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Check if all the required fields aren't empty
      * @return
      */
     private boolean isValid() {
-        if (eventName.equals("")) {
+        if (((EditText) findViewById(R.id.add_event_event_name)).getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Event name is required", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -182,6 +200,7 @@ public class AddEventActivity extends AppCompatActivity {
         timeFromBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fromBtnClicked = true;
                 //first pick the date
                 openDatePicker(from_dateListener);
             }
@@ -189,6 +208,7 @@ public class AddEventActivity extends AppCompatActivity {
         timeUntilBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fromBtnClicked = false;
                 openDatePicker(to_dateListener);
             }
         });
@@ -209,24 +229,9 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UploadImage();
-                //upload to database
-                AddEventToDataBase();
+                //AddEventToDataBase(eventData);
             }
         });
-    }
-
-    private void AddEventToDataBase() {
-        //pre process - get all the events form fields
-        extractFields();
-        //1. validate event
-        if(isValid()){
-            //upload to database in a different thread
-
-        }
-    }
-
-    private void extractFields() {
-        eventName = ((EditText) findViewById(R.id.add_event_event_name)).getText().toString();
     }
 
     private void UploadImage() {
@@ -252,15 +257,6 @@ public class AddEventActivity extends AppCompatActivity {
                     addEventImg.setImageURI(selectedImage);
                 }
             }
-        }
-    }
-
-    private class AddEventAsyncTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean ans = InternetUtils.createEvent();
-            return ans;
         }
     }
 

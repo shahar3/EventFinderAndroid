@@ -64,13 +64,12 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         @Override
         protected Integer doInBackground(Void... voids) {
             //call the joinEvent function
-            InternetUtils.joinEvent(_eventID,_curUser);
-            return 1;
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-
+            boolean res = InternetUtils.joinEvent(_eventID,_curUser);
+            if (res){
+                return 1;
+            }
+            else
+                return -1;
         }
     }
     private void updateUI(MyEvent curEvent) {
