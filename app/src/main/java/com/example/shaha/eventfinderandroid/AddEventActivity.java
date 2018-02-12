@@ -229,9 +229,18 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UploadImage();
-                //AddEventToDataBase(eventData);
+                //upload to database
+                AddEventToDataBase();
             }
         });
+    }
+
+    private void AddEventToDataBase() {
+        //1. validate event
+        if(isValid()){
+            //upload to database in a different thread
+
+        }
     }
 
     private void UploadImage() {
