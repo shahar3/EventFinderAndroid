@@ -2,6 +2,7 @@
 package com.example.shaha.eventfinderandroid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,10 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
+
+import org.json.JSONObject;
 
 public class EventInfoPopUpActivity extends FragmentActivity{
     private TextView mTextView;
@@ -43,10 +48,31 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         //1. get user id
         int curUser = EventsMainActivity.getCurrentUser();
         //2. get event id
-        String eventName = curEvent.getEventName();
+        int eventID = curEvent.getEventID();
         //3. send a post request to join event in a different thread
+        JoinEventAsyncTask task = new JoinEventAsyncTask(eventID,curUser);
+        task.execute();
     }
+    private class JoinEventAsyncTask extends AsyncTask<Void, Void,Integer> {
+        int _eventID;
+        int _curUser;
 
+        JoinEventAsyncTask(int eventID,int curUser){
+            _eventID = eventID;
+            _curUser = curUser;
+        }
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            //call the joinEvent function
+            InternetUtils.joinEvent(_eventID,_curUser);
+            return 1;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+
+        }
+    }
     private void updateUI(MyEvent curEvent) {
         mTextView.setText(curEvent.getEventName());
     }

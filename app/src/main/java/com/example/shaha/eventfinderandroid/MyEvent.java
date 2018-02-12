@@ -21,8 +21,9 @@ public class MyEvent implements Parcelable{
     private double longtitude;
     private double latitude;
     private EventType type;
+    private int eventID;
 
-    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude){
+    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude, int eventID){
         this.setEventName(eventName);
         this.setStartTime(startTime);
         this.setEndTime(endTime);
@@ -30,11 +31,9 @@ public class MyEvent implements Parcelable{
         this.setUserId(userId);
         this.setLongtitude(longtitude);
         this.setLatitude(latitude);
+        this.setEventID(eventID);
     }
 
-    public MyEvent(ArrayList<Object> eventFields, String userId){
-        this((String)eventFields.get(0),(String)eventFields.get(4),(String)eventFields.get(5),"",(int)eventFields.get(6),(double)eventFields.get(2),(double)eventFields.get(1));
-    }
 
     protected MyEvent(Parcel in) {
         eventName = in.readString();
@@ -45,6 +44,7 @@ public class MyEvent implements Parcelable{
         startTime = in.readString();
         endTime = in.readString();
         type = EventType.values()[in.readInt()]; //get the enum type
+        eventID = in.readInt();
     }
 
     public static final Creator<MyEvent> CREATOR = new Creator<MyEvent>() {
@@ -119,8 +119,16 @@ public class MyEvent implements Parcelable{
         return latitude;
     }
 
+    public int getEventID() {
+        return eventID;
+    }
+
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
     }
 
     @Override
@@ -138,5 +146,7 @@ public class MyEvent implements Parcelable{
         parcel.writeString(startTime);
         parcel.writeString(endTime);
         parcel.writeInt(type.getValue());
+        parcel.writeInt(eventID);
     }
+
 }
