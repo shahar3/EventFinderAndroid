@@ -135,22 +135,22 @@ public class InternetUtils {
     }
 
     public static boolean joinEvent(int eventId,int userID){
+        boolean success = false;
         try{
+
             URL url = createURl(baseUrl+"events/"+eventId+"/"+userID);
             String res = makeGetRequest(url);
 
             //transform into a json object
             JSONObject jsonObject = new JSONObject(res);
             String result = jsonObject.getString("success");
-            if (result.equals("false")) {
-                return false;
-            } else {
-                return true;
+            if (result.equals("true")) {
+                success = true;
             }
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            return false;
+            return success;
         }
     }
 

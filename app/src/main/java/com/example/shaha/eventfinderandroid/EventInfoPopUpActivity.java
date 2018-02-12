@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
 
@@ -53,7 +54,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         JoinEventAsyncTask task = new JoinEventAsyncTask(eventID,curUser);
         task.execute();
     }
-    private class JoinEventAsyncTask extends AsyncTask<Void, Void,Integer> {
+    private class JoinEventAsyncTask extends AsyncTask<Void, Void,Boolean> {
         int _eventID;
         int _curUser;
 
@@ -62,14 +63,18 @@ public class EventInfoPopUpActivity extends FragmentActivity{
             _curUser = curUser;
         }
         @Override
-        protected Integer doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             //call the joinEvent function
-            boolean res = InternetUtils.joinEvent(_eventID,_curUser);
-            if (res){
-                return 1;
+             boolean result =  InternetUtils.joinEvent(_eventID,_curUser);
+             return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+            if(result){
+
+            }else{
+                Toast.makeText(getApplicationContext(), "Problem with Join Event", Toast.LENGTH_SHORT).show();
             }
-            else
-                return -1;
         }
     }
     private void updateUI(MyEvent curEvent) {
