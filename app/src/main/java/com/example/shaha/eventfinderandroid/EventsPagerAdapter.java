@@ -8,6 +8,7 @@ import android.content.Context;
 import com.example.shaha.eventfinderandroid.Fragments.LocalEventsFragment;
 import com.example.shaha.eventfinderandroid.Fragments.PersonalAreaFragment;
 import com.example.shaha.eventfinderandroid.Fragments.UpcomingEventsFragment;
+import com.example.shaha.eventfinderandroid.Utils.MapUtils;
 
 /**
  * Created by shaha on 13/01/2018.
@@ -29,7 +30,7 @@ public class EventsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new UpcomingEventsFragment();
             case 2:
-                return new LocalEventsFragment();
+                return new MapUtils();
             default:
                 return new PersonalAreaFragment();
         }

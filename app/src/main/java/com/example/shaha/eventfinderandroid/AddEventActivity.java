@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -69,6 +70,12 @@ public class AddEventActivity extends AppCompatActivity {
     private Date fromDate, toDate;
     private Uri selectedImage;
     private String eventName;
+    private String eventAddress;
+    private String startTime;
+    private String endTime;
+    private double longtitude;
+    private double latitude;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +138,7 @@ public class AddEventActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Event name is required", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (((EditText) findViewById(R.id.add_event_edit_text_address)).getText().toString().equals("")) {
+        if (eventAddress.equals("")) {
             Toast.makeText(getApplicationContext(), "Event address is required", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -151,6 +158,17 @@ public class AddEventActivity extends AppCompatActivity {
         Spinner eventTypeSpinner = (Spinner) findViewById(R.id.add_event_type_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, options);
         eventTypeSpinner.setAdapter(adapter);
+        eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                type = position+1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                type = 1;
+            }
+        });
     }
 
     private void setUpPickLocationBtnListener() {
@@ -227,6 +245,9 @@ public class AddEventActivity extends AppCompatActivity {
 
     private void extractFields() {
         eventName = ((EditText) findViewById(R.id.add_event_event_name)).getText().toString();
+        eventAddress = ((EditText) findViewById(R.id.add_event_edit_text_address)).getText().toString();
+        startTime = timeFromEditText.getText().toString();
+        endTime = timeUntilEditText.getText().toString();
     }
 
     private void UploadImage() {
@@ -259,7 +280,7 @@ public class AddEventActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            boolean ans = InternetUtils.createEvent();
+            boolean ans = InternetUtils.createEvent("description",eventName,startTime,endTime,latitude,longtitude,EventsMainActivity.getCurrentUser(),type);
             return ans;
         }
     }
@@ -293,6 +314,9 @@ public class AddEventActivity extends AppCompatActivity {
     private void updateLocation(Place place) {
         EditText placeAddressEditText = (EditText) findViewById(R.id.add_event_edit_text_address);
         placeAddressEditText.setText(place.getAddress());
+        //extract latitude and longtitude
+        latitude = place.getLatLng().latitude;
+        longtitude = place.getLatLng().longitude;
     }
 
     public void setDateAndTimeListener() {

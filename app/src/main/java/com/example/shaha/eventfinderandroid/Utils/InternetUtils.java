@@ -104,7 +104,7 @@ public class InternetUtils {
                 Double longtitude = eventJson.getDouble("Longtitude");
                 int userId = eventJson.getInt("UserID");
 
-                MyEvent event = new MyEvent(eventName, startTime, endTime, description, userId, longtitude, latitude,eventID);
+                MyEvent event = new MyEvent(eventName, startTime, endTime, description, userId, longtitude, latitude, eventID);
                 events.add(event);
             }
         } catch (JSONException e) {
@@ -134,12 +134,12 @@ public class InternetUtils {
         }
     }
 
-    public static boolean joinEvent(int eventId,int userID){
-        try{
-            URL url = createURl(baseUrl+"events/"+eventId+"/"+userID);
-        }catch (Exception e){
+    public static boolean joinEvent(int eventId, int userID) {
+        try {
+            URL url = createURl(baseUrl + "events/" + eventId + "/" + userID);
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return false;
         }
     }
@@ -255,5 +255,40 @@ public class InternetUtils {
             Log.e("InternetUtils", "Error with the request");
         }
         return -1;
+    }
+
+    //add event: Description, Name, StartTime, EndTime, Latitude, Longtitude, UserId, Type
+    public static boolean createEvent(String description, String name, String startTime, String endTime, Double latitude, Double longtitude, int userId, int type) {
+        try {
+            URL url = createURl(baseUrl + "events");
+            JSONObject jsonObject = createJSON(description, name, startTime, endTime, latitude, longtitude, userId, type);
+
+            String resStr = sendPost(url, jsonObject);
+
+            //handle response
+            JSONObject jsonResponse = new JSONObject(resStr);
+
+        } catch (Exception e) {
+            Log.e("InternetUtils", "Error with createEvent");
+        } finally {
+            return true;
+        }
+    }
+
+    private static JSONObject createJSON(String description, String name, String startTime, String endTime, Double latitude, Double longtitude, int userId, int type) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("Description", description);
+            json.put("Name", name);
+            json.put("StartTime", startTime);
+            json.put("EndTime", endTime);
+            json.put("Latitude", latitude);
+            json.put("Longtitude", longtitude);
+            json.put("UserID", userId);
+            json.put("Type", type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

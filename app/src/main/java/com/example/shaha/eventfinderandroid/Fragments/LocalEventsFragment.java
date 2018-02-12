@@ -26,20 +26,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-public abstract class LocalEventsFragment extends FragmentActivity implements OnMapReadyCallback {
+public abstract class LocalEventsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private boolean mapReady = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
-        setUpMap();
-        setUpMapButtons();
     }
 
-    private void setUpMapButtons(){
-        Button mapBtn = (Button) findViewById(R.id.map_map_btn);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_local_events, container, false);
+
+        setUpMapButtons(view);
+
+        return view;
+    }
+
+    private void setUpMapButtons(View view){
+        Button mapBtn = (Button) view.findViewById(R.id.map_map_btn);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +55,7 @@ public abstract class LocalEventsFragment extends FragmentActivity implements On
                 }
             }
         });
-        Button satelliteBtn = (Button) findViewById(R.id.map_satellite_btn);
+        Button satelliteBtn = (Button) view.findViewById(R.id.map_satellite_btn);
         satelliteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,7 +64,7 @@ public abstract class LocalEventsFragment extends FragmentActivity implements On
                 }
             }
         });
-        Button hybridBtn = (Button) findViewById(R.id.map_hybrid_btn);
+        Button hybridBtn = (Button) view.findViewById(R.id.map_hybrid_btn);
         hybridBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,13 +80,13 @@ public abstract class LocalEventsFragment extends FragmentActivity implements On
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         setUpMap();
     }
 
     private void setUpMap() {
-        ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        ((SupportMapFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     protected GoogleMap getMap(){
@@ -95,5 +102,6 @@ public abstract class LocalEventsFragment extends FragmentActivity implements On
         }
         mMap = googleMap;
         mapReady = true;
+        startMapActions();
     }
 }
