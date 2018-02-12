@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -57,9 +58,7 @@ public class AddEventActivity extends AppCompatActivity {
     private static final int RC_PICK_IMAGE = 2;
     private static final int SELECT_IMAGE = 3;
     private EditText timeFromEditText, timeUntilEditText;
-    private boolean fromBtnClicked;
     private String[] options;
-    private Date startTime, endTime;
     private ImageView addEventImg;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -70,6 +69,13 @@ public class AddEventActivity extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener from_timeListener, to_timeListener;
     private Date fromDate, toDate;
     private Uri selectedImage;
+    private String eventName;
+    private String eventAddress;
+    private String startTime;
+    private String endTime;
+    private double longtitude;
+    private double latitude;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,33 +129,16 @@ public class AddEventActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private ArrayList<Object> getEventInfo() {
-        ArrayList<Object> eventData = new ArrayList<>();
-        //check if all required fields are not empty
-        if (isValid()) {
-            eventData.add(((EditText) findViewById(R.id.add_event_event_name)).getText().toString());
-            eventData.add(place.getLatLng().latitude);
-            eventData.add(place.getLatLng().longitude);
-            eventData.add(((Spinner) findViewById(R.id.add_event_type_spinner)).getSelectedItem().toString());
-            eventData.add(startTime);
-            eventData.add(endTime);
-            eventData.add(EventsMainActivity.getCurrentUser());
-            return eventData;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Check if all the required fields aren't empty
      * @return
      */
     private boolean isValid() {
-        if (((EditText) findViewById(R.id.add_event_event_name)).getText().toString().equals("")) {
+        if (eventName.equals("")) {
             Toast.makeText(getApplicationContext(), "Event name is required", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (((EditText) findViewById(R.id.add_event_edit_text_address)).getText().toString().equals("")) {
+        if (eventAddress.equals("")) {
             Toast.makeText(getApplicationContext(), "Event address is required", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -169,6 +158,17 @@ public class AddEventActivity extends AppCompatActivity {
         Spinner eventTypeSpinner = (Spinner) findViewById(R.id.add_event_type_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, options);
         eventTypeSpinner.setAdapter(adapter);
+        eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                type = position+1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                type = 1;
+            }
+        });
     }
 
     private void setUpPickLocationBtnListener() {
@@ -200,7 +200,6 @@ public class AddEventActivity extends AppCompatActivity {
         timeFromBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fromBtnClicked = true;
                 //first pick the date
                 openDatePicker(from_dateListener);
             }
@@ -208,7 +207,6 @@ public class AddEventActivity extends AppCompatActivity {
         timeUntilBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fromBtnClicked = false;
                 openDatePicker(to_dateListener);
             }
         });
@@ -229,9 +227,27 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UploadImage();
-                //AddEventToDataBase(eventData);
+                //upload to database
+                AddEventToDataBase();
             }
         });
+    }
+
+    private void AddEventToDataBase() {
+        //pre process - get all the events form fields
+        extractFields();
+        //1. validate event
+        if(isValid()){
+            //upload to database in a different thread
+
+        }
+    }
+
+    private void extractFields() {
+        eventName = ((EditText) findViewById(R.id.add_event_event_name)).getText().toString();
+        eventAddress = ((EditText) findViewById(R.id.add_event_edit_text_address)).getText().toString();
+        startTime = timeFromEditText.getText().toString();
+        endTime = timeUntilEditText.getText().toString();
     }
 
     private void UploadImage() {
@@ -257,6 +273,15 @@ public class AddEventActivity extends AppCompatActivity {
                     addEventImg.setImageURI(selectedImage);
                 }
             }
+        }
+    }
+
+    private class AddEventAsyncTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean ans = InternetUtils.createEvent("description",eventName,startTime,endTime,latitude,longtitude,EventsMainActivity.getCurrentUser(),type);
+            return ans;
         }
     }
 
@@ -289,6 +314,9 @@ public class AddEventActivity extends AppCompatActivity {
     private void updateLocation(Place place) {
         EditText placeAddressEditText = (EditText) findViewById(R.id.add_event_edit_text_address);
         placeAddressEditText.setText(place.getAddress());
+        //extract latitude and longtitude
+        latitude = place.getLatLng().latitude;
+        longtitude = place.getLatLng().longitude;
     }
 
     public void setDateAndTimeListener() {
