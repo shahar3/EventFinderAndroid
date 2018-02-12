@@ -74,9 +74,9 @@ public class MapUtils extends LocalEventsFragment {
         mMap = map;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LATITUDE, LONGTITUDE), 10));
-        mClusterManager = new ClusterManager<EventItem>(this, mMap);
+        mClusterManager = new ClusterManager<EventItem>(getContext(), mMap);
         //set the markers to be a custom design
-        mClusterManager.setRenderer(new EventRenderer(getApplicationContext()));
+        mClusterManager.setRenderer(new EventRenderer(getContext()));
 
         mMap.setOnCameraIdleListener(mClusterManager);
         for (MyEvent event : events) {

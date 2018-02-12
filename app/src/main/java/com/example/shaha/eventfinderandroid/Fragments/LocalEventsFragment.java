@@ -40,6 +40,7 @@ public abstract class LocalEventsFragment extends Fragment implements OnMapReady
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_local_events, container, false);
 
+        setUpMap();
         setUpMapButtons(view);
 
         return view;
@@ -86,7 +87,7 @@ public abstract class LocalEventsFragment extends Fragment implements OnMapReady
     }
 
     private void setUpMap() {
-        ((SupportMapFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     protected GoogleMap getMap(){
