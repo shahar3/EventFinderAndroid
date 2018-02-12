@@ -134,12 +134,22 @@ public class InternetUtils {
         }
     }
 
-    public static boolean joinEvent(int eventId, int userID) {
-        try {
-            URL url = createURl(baseUrl + "events/" + eventId + "/" + userID);
-        } catch (Exception e) {
+    public static boolean joinEvent(int eventId,int userID){
+        try{
+            URL url = createURl(baseUrl+"events/"+eventId+"/"+userID);
+            String res = makeGetRequest(url);
+
+            //transform into a json object
+            JSONObject jsonObject = new JSONObject(res);
+            String result = jsonObject.getString("success");
+            if (result.equals("false")) {
+                return false;
+            } else {
+                return true;
+            }
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
+        }finally {
             return false;
         }
     }
