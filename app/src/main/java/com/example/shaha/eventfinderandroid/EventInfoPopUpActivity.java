@@ -24,11 +24,11 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventInfoPopUpActivity extends FragmentActivity{
     private TextView mTextView;
-    private TextView mTextViewAttendings;
     private MyEvent curEvent;
     private boolean showBtn;
     private ByteArrayOutputStream imageStream;
@@ -41,14 +41,12 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         //Set popup window to take portion of the screen.
         getWindow().setLayout((int) (width_height[0] * 0.8), (int) (width_height[1] * 0.7));
         mTextView = (TextView) findViewById(R.id.event_info_event_name_tv);
-        mTextViewAttendings = (TextView) findViewById(R.id.event_info_attendings);
-        //int attendingsCount = GetEventAttendingsCount();
-        
         //get the MepoEvent object
         Intent i = getIntent();
         curEvent = (MyEvent) i.getParcelableExtra("event");
         showBtn = i.getBooleanExtra("showJoinBtn",false);
-
+        GetAttendings();
+        DownloadImage();
         //show the event in the GUI
         updateUI(curEvent);
 
@@ -65,24 +63,31 @@ public class EventInfoPopUpActivity extends FragmentActivity{
                 sendJoinRequest();
             }
         });
-        DownloadImage();
+
     }
 
-    private class EventAttendingsAsyncTask extends AsyncTask<ByteArrayOutputStream, Void, Integer> {
+    private void GetAttendings() {
+        EventAttendingsAsyncTask task = new EventAttendingsAsyncTask();
+        task.execute();
+    }
+
+    private class EventAttendingsAsyncTask extends AsyncTask<Void, Void, List<EventAttending>> {
 
         @Override
-        protected Integer doInBackground(ByteArrayOutputStream... stream) {
-            try {
-                List<EventAttending> attendings = InternetUtils.getEventAttendings(curEvent.getEventID());
-            } catch (Exception ex) {
-                //Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            return 1;
+        protected List<EventAttending> doInBackground(Void... vo) {
+            List<EventAttending> attendings = InternetUtils.getEventAttendings(curEvent.getEventID());
+            return  attendings;
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-
+        protected void onPostExecute(List<EventAttending> attendings) {
+            TextView textViewAttendings = (TextView) findViewById(R.id.event_info_attendings_count);
+            if(attendings.size()!=0){
+                textViewAttendings.setText(attendings.size()+"");
+            }
+            else{
+                textViewAttendings.setText("0");
+            }
         }
 
     }
