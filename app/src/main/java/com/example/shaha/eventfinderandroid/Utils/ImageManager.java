@@ -73,9 +73,7 @@ public class ImageManager {
 
         if(blob.exists()){
             blob.downloadAttributes();
-
             imageLength = blob.getProperties().getLength();
-
             blob.download(imageStream);
         }
     }

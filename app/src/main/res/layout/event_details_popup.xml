@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,12 +51,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/event_details"
-                android:text="@string/event_info_attending" />
+                android:text="Attending: " />
 
             <TextView
+                android:id="@+id/event_info_attendings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="122" />
+                android:text="0" />
         </LinearLayout>
     </LinearLayout>
 
@@ -85,5 +87,14 @@
                 android:text="@string/lorem_ipsum_3p" />
         </ScrollView>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/event_img"
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        app:srcCompat="@drawable/amu_bubble_shadow" />
 
 </RelativeLayout>

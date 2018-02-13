@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.shaha.eventfinderandroid.EventAttending;
 import com.example.shaha.eventfinderandroid.MyEvent;
 
 import org.apache.http.HttpEntity;
@@ -90,6 +91,49 @@ public class InternetUtils {
             return events;
         }
     }
+    public static List<EventAttending> getEventAttendings(int eventID) {
+        List<EventAttending> attendings = new ArrayList() {
+        };
+        try {
+            URL url = createURl(baseUrl + "events/" + eventID+ "/attendings");
+            String res = makeGetRequest(url);
+
+            //transform into a json object
+            JSONObject jsonObject = new JSONObject(res);
+
+            //extract events from the json object
+            attendings = extractAttendings(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return attendings;
+        }
+    }
+
+    private static List<EventAttending> extractAttendings(JSONObject jsonObject) {
+        List<EventAttending> attendings = new ArrayList<>();
+        try {
+            JSONArray usersJson = jsonObject.getJSONArray("data");
+
+            //iterate on each json object
+            for (int i = 0; i < usersJson.length(); i++) {
+                JSONObject userJson = (JSONObject) usersJson.get(i);
+                int userID = userJson.getInt("ID");
+                String firstName = userJson.getString("FirstName");
+                String lastName = userJson.getString("LastName");
+                String phoneNumber = userJson.getString("PhoneNumber");
+
+                EventAttending attending = new EventAttending(userID,firstName,lastName,phoneNumber);
+                attendings.add(attending);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return attendings;
+        }
+    }
 
     private static List<MyEvent> extractEvents(JSONObject jsonObject) {
         List<MyEvent> events = new ArrayList<>();
@@ -124,7 +168,7 @@ public class InternetUtils {
     public static List<MyEvent> getUserEvents(int userId) {
         List<MyEvent> events = null;
         try {
-            URL url = createURl(baseUrl + "users/events1/" + userId);
+            URL url = createURl(baseUrl + "users/events2/" + userId);
             String res = makeGetRequest(url);
 
             //transform into a json object
