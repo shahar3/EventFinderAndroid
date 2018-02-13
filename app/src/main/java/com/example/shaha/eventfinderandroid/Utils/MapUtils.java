@@ -30,10 +30,10 @@ public class MapUtils extends LocalEventsFragment {
     private GoogleMap mMap;
     private ClusterManager<EventItem> mClusterManager;
 
-    private class EventRenderer extends DefaultClusterRenderer<EventItem>{
+    private class EventRenderer extends DefaultClusterRenderer<EventItem> {
 
         public EventRenderer(Context context) {
-            super(context, mMap , mClusterManager);
+            super(context, mMap, mClusterManager);
         }
 
         @Override
@@ -83,7 +83,7 @@ public class MapUtils extends LocalEventsFragment {
             double latitude = event.getLatitude();
             double longtitude = event.getLongtitude();
 
-            EventItem item = new EventItem(latitude,longtitude, event.getEventName(), event.getDescription(),event);
+            EventItem item = new EventItem(latitude, longtitude, event.getEventName(), event.getDescription(), event);
             mClusterManager.addItem(item);
         }
     }
@@ -96,6 +96,8 @@ public class MapUtils extends LocalEventsFragment {
     @Override
     protected void startMapActions() {
         //get the events first
+        EventsAsyncTask task = new EventsAsyncTask();
+        task.execute();
     }
 
     private class EventsAsyncTask extends AsyncTask<Void, Void, List<MyEvent>> {

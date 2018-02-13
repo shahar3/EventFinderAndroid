@@ -20,7 +20,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAlvEcbgiqxYJ5ehjphzS0gQ050jO9r8lc" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,15 +31,19 @@
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Register"
             android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".EventInfoPopUpActivity"
-            android:theme="@style/PopUpTheme" />
-        <activity android:name=".AddEventActivity" />
+            android:theme="@style/PopUpTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddEventActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".EventsMainActivity"></activity>
     </application>
 

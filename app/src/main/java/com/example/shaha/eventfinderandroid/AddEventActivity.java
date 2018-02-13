@@ -131,6 +131,7 @@ public class AddEventActivity extends AppCompatActivity {
 
     /**
      * Check if all the required fields aren't empty
+     *
      * @return
      */
     private boolean isValid() {
@@ -161,7 +162,7 @@ public class AddEventActivity extends AppCompatActivity {
         eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                type = position+1;
+                type = position + 1;
             }
 
             @Override
@@ -237,9 +238,10 @@ public class AddEventActivity extends AppCompatActivity {
         //pre process - get all the events form fields
         extractFields();
         //1. validate event
-        if(isValid()){
+        if (isValid()) {
             //upload to database in a different thread
-
+            AddEventAsyncTask task = new AddEventAsyncTask();
+            task.execute();
         }
     }
 
@@ -280,8 +282,19 @@ public class AddEventActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            boolean ans = InternetUtils.createEvent("description",eventName,startTime,endTime,latitude,longtitude,EventsMainActivity.getCurrentUser(),type);
+            boolean ans = InternetUtils.createEvent("description", eventName, startTime, endTime, latitude, longtitude, EventsMainActivity.getCurrentUser(), type);
             return ans;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean added) {
+            super.onPostExecute(added);
+            //handle result
+            if (added) {
+                Toast.makeText(AddEventActivity.this, "Event was added successfully", Toast.LENGTH_SHORT).show();
+                finish();
+                //need to update list... trigger push notification
+            }
         }
     }
 
@@ -344,7 +357,7 @@ public class AddEventActivity extends AppCompatActivity {
                 cal.add(Calendar.HOUR_OF_DAY, hour);
                 cal.add(Calendar.MINUTE, minute);
                 fromDate = cal.getTime();
-                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy HH:mm:00.00");
+                SimpleDateFormat ft = new SimpleDateFormat("MM/dd/yyyy HH:mm:00.00");
                 Toast.makeText(AddEventActivity.this, ft.format(fromDate).toString(), Toast.LENGTH_SHORT).show();
                 timeFromEditText.setText(ft.format(fromDate));
             }
@@ -359,7 +372,7 @@ public class AddEventActivity extends AppCompatActivity {
 
                 toDate = new GregorianCalendar(yearFinal, monthFinal, dayFinal).getTime();
                 //after pick the time
-                openTimePicker(from_timeListener);
+                openTimePicker(to_timeListener);
             }
         };
 
@@ -370,13 +383,13 @@ public class AddEventActivity extends AppCompatActivity {
                 int minute = i1;
 
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(fromDate);
+                cal.setTime(toDate);
                 cal.add(Calendar.HOUR_OF_DAY, hour);
                 cal.add(Calendar.MINUTE, minute);
-                fromDate = cal.getTime();
-                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy HH:mm:00.00");
-                Toast.makeText(AddEventActivity.this, ft.format(fromDate).toString(), Toast.LENGTH_SHORT).show();
-                timeUntilEditText.setText(ft.format(fromDate));
+                toDate = cal.getTime();
+                SimpleDateFormat ft = new SimpleDateFormat("MM/dd/yyyy HH:mm:00.00");
+                Toast.makeText(AddEventActivity.this, ft.format(toDate).toString(), Toast.LENGTH_SHORT).show();
+                timeUntilEditText.setText(ft.format(toDate));
             }
         };
     }

@@ -76,10 +76,6 @@ public abstract class LocalEventsFragment extends Fragment implements OnMapReady
         });
     }
 
-    private int getLayoutId() {
-        return R.layout.fragment_local_events;
-    }
-
     @Override
     public void onResume() {
         super.onResume();

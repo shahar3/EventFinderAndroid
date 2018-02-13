@@ -30,13 +30,13 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        emailET = (EditText)findViewById(R.id.edit_text_username_register);
-        passwordET = (EditText)findViewById(R.id.edit_text_password_register);
-        confirmPasswordET = (EditText)findViewById(R.id.edit_text_confirm_password_register);
-        firstNameET = (EditText)findViewById(R.id.edit_text_first_name_register);
-        lastNameET = (EditText)findViewById(R.id.edit_text_last_name_register);
-        phoneNumberET = (EditText)findViewById(R.id.edit_text_phone_number_register);
-        submitBtn = (Button)findViewById(R.id.submit_btn_register);
+        emailET = (EditText) findViewById(R.id.edit_text_username_register);
+        passwordET = (EditText) findViewById(R.id.edit_text_password_register);
+        confirmPasswordET = (EditText) findViewById(R.id.edit_text_confirm_password_register);
+        firstNameET = (EditText) findViewById(R.id.edit_text_first_name_register);
+        lastNameET = (EditText) findViewById(R.id.edit_text_last_name_register);
+        phoneNumberET = (EditText) findViewById(R.id.edit_text_phone_number_register);
+        submitBtn = (Button) findViewById(R.id.submit_btn_register);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,8 +52,8 @@ public class Register extends AppCompatActivity {
         String confirmPassword = confirmPasswordET.getText().toString();
 
         //check if the confirmed password is identical to the password
-        if(!password.equals(confirmPassword)){
-            Toast.makeText(this,"The confirmed password is not the same like the password",Toast.LENGTH_SHORT).show();
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "The confirmed password is not the same like the password", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -61,7 +61,7 @@ public class Register extends AppCompatActivity {
         String lastName = lastNameET.getText().toString();
         String phoneNumber = phoneNumberET.getText().toString();
 
-        JSONObject jsonObject = buildJSONObject(email,password,firstName,lastName, phoneNumber);
+        JSONObject jsonObject = buildJSONObject(email, password, firstName, lastName, phoneNumber);
 
         //Execute the thread
         RegisterAsyncTask task = new RegisterAsyncTask();
@@ -73,17 +73,17 @@ public class Register extends AppCompatActivity {
         try {
             json.put("Email", email);
             json.put("Password", password);
-            json.put("FirstName",firstName);
-            json.put("LastName",lastName);
-            json.put("PhoneNumber",phoneNumber);
-            json.put("PhoneID",1);
-        }catch (JSONException e){
+            json.put("FirstName", firstName);
+            json.put("LastName", lastName);
+            json.put("PhoneNumber", phoneNumber);
+            json.put("PhoneID", 1);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return json;
     }
 
-    private class RegisterAsyncTask extends AsyncTask<JSONObject, Void,Integer> {
+    private class RegisterAsyncTask extends AsyncTask<JSONObject, Void, Integer> {
 
         @Override
         protected Integer doInBackground(JSONObject... urls) {
@@ -96,8 +96,11 @@ public class Register extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-            //
+        protected void onPostExecute(Integer result) {
+            if (result > 0) {
+                Toast.makeText(Register.this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 

@@ -45,22 +45,22 @@ public class Login extends AppCompatActivity {
 
         //check if user exist
         LoginAsyncTask task = new LoginAsyncTask();
-        JSONObject jsonObject = buildJSONObject(email,password);
+        JSONObject jsonObject = buildJSONObject(email, password);
         task.execute(jsonObject);
     }
 
     private JSONObject buildJSONObject(String email, String password) {
         JSONObject json = new JSONObject();
         try {
-            json.put("Email",email);
-            json.put("Password",password);
+            json.put("Email", email);
+            json.put("Password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return json;
     }
 
-    private class LoginAsyncTask extends AsyncTask<JSONObject, Void,Integer>{
+    private class LoginAsyncTask extends AsyncTask<JSONObject, Void, Integer> {
 
         @Override
         protected Integer doInBackground(JSONObject... urls) {
@@ -75,13 +75,15 @@ public class Login extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer result) {
-            if(result!=-1){
+            if (result > 0) {
                 //open the main activity
-                Intent intent = new Intent(getApplicationContext(),EventsMainActivity.class);
-                intent.putExtra("userId",result);
+                Intent intent = new Intent(getApplicationContext(), EventsMainActivity.class);
+                intent.putExtra("userId", result);
                 startActivity(intent);
-            }else{
-                Toast.makeText(getApplicationContext(),"Incorrect email or password",Toast.LENGTH_SHORT).show();
+            } else if (result == -1) {
+                Toast.makeText(Login.this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(Login.this, "Error connecting to server", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -62,6 +62,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
             _eventID = eventID;
             _curUser = curUser;
         }
+
         @Override
         protected Boolean doInBackground(Void... voids) {
             //call the joinEvent function
@@ -77,6 +78,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
             }
         }
     }
+
     private void updateUI(MyEvent curEvent) {
         mTextView.setText(curEvent.getEventName());
     }

@@ -23,7 +23,7 @@ public class MyEvent implements Parcelable{
     private EventType type;
     private int eventID;
 
-    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude, int eventID){
+    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude, int eventID, int type){
         this.setEventName(eventName);
         this.setStartTime(startTime);
         this.setEndTime(endTime);
@@ -32,6 +32,7 @@ public class MyEvent implements Parcelable{
         this.setLongtitude(longtitude);
         this.setLatitude(latitude);
         this.setEventID(eventID);
+        this.type = EventType.values()[type];
     }
 
 
@@ -45,6 +46,7 @@ public class MyEvent implements Parcelable{
         endTime = in.readString();
         //type = EventType.values()[in.readInt()]; //get the enum type
         eventID = in.readInt();
+        type = EventType.values()[in.readInt()];
     }
 
     public static final Creator<MyEvent> CREATOR = new Creator<MyEvent>() {
@@ -147,6 +149,7 @@ public class MyEvent implements Parcelable{
         parcel.writeString(endTime);
         //parcel.writeInt(type.getValue());
         parcel.writeInt(eventID);
+        parcel.writeInt(type.getValue());
     }
 
 }

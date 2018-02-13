@@ -1,10 +1,12 @@
 package com.example.shaha.eventfinderandroid.Utils;
 
+import android.content.Context;
 import android.content.Entity;
 import android.util.EventLog;
 import android.util.EventLogTags;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.shaha.eventfinderandroid.MyEvent;
 
@@ -53,7 +55,7 @@ public class InternetUtils {
             JSONObject jsonObject = new JSONObject(res);
             String jsonResult = jsonObject.getString("success");
             if (jsonResult.equals("false")) {
-                return -1;
+                result = -1;
             } else { //login succeeded
                 String userIdStr = jsonObject.getString("data");
                 result = Integer.valueOf(userIdStr);
@@ -61,8 +63,10 @@ public class InternetUtils {
             }
         } catch (IOException e) {
             Log.e("InternetUtils", "Error with the request");
+            result = -2;
         } catch (JSONException e) {
             Log.e("InternetUtils", "Error with the request");
+            result = -2;
         } finally {
             return result;
         }
@@ -103,8 +107,9 @@ public class InternetUtils {
                 Double latitude = eventJson.getDouble("Latitude");
                 Double longtitude = eventJson.getDouble("Longtitude");
                 int userId = eventJson.getInt("UserID");
+                int type = eventJson.getInt("Type");
 
-                MyEvent event = new MyEvent(eventName, startTime, endTime, description, userId, longtitude, latitude, eventID);
+                MyEvent event = new MyEvent(eventName, startTime, endTime, description, userId, longtitude, latitude, eventID, type);
                 events.add(event);
             }
         } catch (JSONException e) {
@@ -134,11 +139,11 @@ public class InternetUtils {
         }
     }
 
-    public static boolean joinEvent(int eventId,int userID){
+    public static boolean joinEvent(int eventId, int userID) {
         boolean success = false;
-        try{
+        try {
 
-            URL url = createURl(baseUrl+"events/"+eventId+"/"+userID);
+            URL url = createURl(baseUrl + "events/" + eventId + "/" + userID);
             String res = makeGetRequest(url);
 
             //transform into a json object
@@ -147,9 +152,9 @@ public class InternetUtils {
             if (result.equals("true")) {
                 success = true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return success;
         }
     }
@@ -269,6 +274,7 @@ public class InternetUtils {
 
     //add event: Description, Name, StartTime, EndTime, Latitude, Longtitude, UserId, Type
     public static boolean createEvent(String description, String name, String startTime, String endTime, Double latitude, Double longtitude, int userId, int type) {
+        boolean ans = false;
         try {
             URL url = createURl(baseUrl + "events");
             JSONObject jsonObject = createJSON(description, name, startTime, endTime, latitude, longtitude, userId, type);
@@ -277,11 +283,17 @@ public class InternetUtils {
 
             //handle response
             JSONObject jsonResponse = new JSONObject(resStr);
+            String result = jsonResponse.getString("success");
+            if(!result.equals("false")){
+                ans = true;
+            }else{
+                ans = false;
+            }
 
         } catch (Exception e) {
             Log.e("InternetUtils", "Error with createEvent");
         } finally {
-            return true;
+            return ans;
         }
     }
 
