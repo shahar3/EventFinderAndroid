@@ -46,7 +46,7 @@ public class PersonalAreaFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_personal_area, container, false);
         //set the list view
-        eventsListView = (ListView)view.findViewById(R.id.my_events_list_view);
+        eventsListView = (ListView) view.findViewById(R.id.my_events_list_view);
         events = new ArrayList<>();
         mAdapter = new EventAdapter(getContext(), events);
         eventsListView.setAdapter(mAdapter);
@@ -56,21 +56,22 @@ public class PersonalAreaFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(mContext, EventInfoPopUpActivity.class);
                 MyEvent event = mAdapter.getItem(i);
-                intent.putExtra("event",event);
+                intent.putExtra("event", event);
+                intent.putExtra("showJoinBtn", false);
                 startActivity(intent);
             }
         });
 
         //set an empty state for the listview
-        LinearLayout emptyLayout = (LinearLayout)view.findViewById(R.id.personal_empty_state);
+        LinearLayout emptyLayout = (LinearLayout) view.findViewById(R.id.personal_empty_state);
         eventsListView.setEmptyView(emptyLayout);
 
         //set the fab button
-        FloatingActionButton addEvent = (FloatingActionButton)view.findViewById(R.id.fab);
+        FloatingActionButton addEvent = (FloatingActionButton) view.findViewById(R.id.fab);
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentAddEvent = new Intent(getContext(),AddEventActivity.class);
+                Intent intentAddEvent = new Intent(getContext(), AddEventActivity.class);
                 startActivity(intentAddEvent);
             }
         });
@@ -82,7 +83,7 @@ public class PersonalAreaFragment extends Fragment {
         return view;
     }
 
-    private class EventsAsyncTask extends AsyncTask<Integer,Void,List<MyEvent>>{
+    private class EventsAsyncTask extends AsyncTask<Integer, Void, List<MyEvent>> {
 
         @Override
         protected List<MyEvent> doInBackground(Integer... integers) {

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 public class EventInfoPopUpActivity extends FragmentActivity{
     private TextView mTextView;
     private MyEvent curEvent;
+    private boolean showBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,11 +33,18 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         //get the MepoEvent object
         Intent i = getIntent();
         curEvent = (MyEvent) i.getParcelableExtra("event");
+        showBtn = i.getParcelableExtra("showJoinBtn");
+
         //show the event in the GUI
         updateUI(curEvent);
 
+
         //set join event button listener
         Button joinBtn = (Button)findViewById(R.id.event_info_join_btn);
+        //check if join button is needed
+        if(!showBtn) {
+            joinBtn.setVisibility(View.GONE);
+        }
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

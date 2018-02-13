@@ -1,6 +1,7 @@
 package com.example.shaha.eventfinderandroid.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.shaha.eventfinderandroid.EventAdapter;
+import com.example.shaha.eventfinderandroid.EventInfoPopUpActivity;
 import com.example.shaha.eventfinderandroid.MyEvent;
 import com.example.shaha.eventfinderandroid.R;
 import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
@@ -50,6 +53,16 @@ public class UpcomingEventsFragment extends Fragment {
         ListView eventsListView = (ListView)view.findViewById(R.id.upcoming_events_list_view);
         mAdapter = new EventAdapter(this.getContext(),events);
         eventsListView.setAdapter(mAdapter);
+        eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), EventInfoPopUpActivity.class);
+                MyEvent event = mAdapter.getItem(i);
+                intent.putExtra("event", event);
+                intent.putExtra("showJoinBtn", true);
+                startActivity(intent);
+            }
+        });
 
         EventsAsyncTask task = new EventsAsyncTask();
         task.execute();
