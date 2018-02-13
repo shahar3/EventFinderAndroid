@@ -33,7 +33,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         //get the MepoEvent object
         Intent i = getIntent();
         curEvent = (MyEvent) i.getParcelableExtra("event");
-        showBtn = i.getParcelableExtra("showJoinBtn");
+        showBtn = i.getBooleanExtra("showJoinBtn",false);
 
         //show the event in the GUI
         updateUI(curEvent);
