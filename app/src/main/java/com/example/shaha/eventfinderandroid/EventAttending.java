@@ -37,4 +37,20 @@ public class EventAttending {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public int getID() {
+        return ID;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 }
