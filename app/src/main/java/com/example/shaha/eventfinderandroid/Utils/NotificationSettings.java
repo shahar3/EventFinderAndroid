@@ -6,7 +6,6 @@ package com.example.shaha.eventfinderandroid.Utils;
 
 public class NotificationSettings {
     public static String SenderId = "532106152879";
-    public static String HubName = "notificationhubfirebase";
-    public static String HubListenConnectionString = "< your DefaultListenSharedAccessSignature>";
-    public static String HubFullAccess = "<your DefaultFullSharedAccessSignature>";
+    public static String HubName = "eventfinder";
+    public static String HubListenConnectionString = "Endpoint=sb://eventfindernamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=Qp2nSxkminzrcNpmEhrdhDhu5VDDI1aQjR9z1ogcjXA=";
 }
