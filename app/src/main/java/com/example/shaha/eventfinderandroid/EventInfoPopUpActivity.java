@@ -1,18 +1,25 @@
 
 package com.example.shaha.eventfinderandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +29,12 @@ import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EventInfoPopUpActivity extends FragmentActivity{
     private TextView mTextView;
@@ -33,14 +42,24 @@ public class EventInfoPopUpActivity extends FragmentActivity{
     private boolean showBtn;
     private ByteArrayOutputStream imageStream;
     private ImageView imageView;
-    @Override
+    private ScrollView usersScrollView;
+    private UserAdapter mAdapter;
+    private List<EventAttending> attendings = new ArrayList<>();
+    private Context mContext = this;
+    private TextView mAdressTv;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_details_popup);
         int[] width_height = getDimensions();
         //Set popup window to take portion of the screen.
         getWindow().setLayout((int) (width_height[0] * 0.8), (int) (width_height[1] * 0.7));
-        mTextView = (TextView) findViewById(R.id.event_info_event_name_tv);
+
+//        usersScrollView = (ScrollView) findViewById(R.id.event_attendings_scroll_view);
+//        attendings = new ArrayList<>();
+//        mAdapter = new UserAdapter(mContext, attendings);
+//        usersScrollView.setAdapter(mAdapter);
+
+
         //get the MepoEvent object
         Intent i = getIntent();
         curEvent = (MyEvent) i.getParcelableExtra("event");
@@ -75,7 +94,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
 
         @Override
         protected List<EventAttending> doInBackground(Void... vo) {
-            List<EventAttending> attendings = InternetUtils.getEventAttendings(curEvent.getEventID());
+            attendings = InternetUtils.getEventAttendings(curEvent.getEventID());
             return  attendings;
         }
 
@@ -83,7 +102,7 @@ public class EventInfoPopUpActivity extends FragmentActivity{
         protected void onPostExecute(List<EventAttending> attendings) {
             TextView textViewAttendings = (TextView) findViewById(R.id.event_info_attendings_count);
             if(attendings.size()!=0){
-                textViewAttendings.setText(attendings.size()+"");
+                textViewAttendings.setText((attendings.size())+"");
             }
             else{
                 textViewAttendings.setText("0");
@@ -162,8 +181,40 @@ public class EventInfoPopUpActivity extends FragmentActivity{
     }
 
     private void updateUI(MyEvent curEvent) {
+        mTextView = (TextView) findViewById(R.id.event_info_event_name_tv);
         mTextView.setText(curEvent.getEventName());
+        updateAddress();
     }
+
+    private void updateAddress() {
+        updateAddressAsyncTask task = new updateAddressAsyncTask();
+        task.execute();
+    }
+
+    private class updateAddressAsyncTask extends AsyncTask<Void, Void,String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            Geocoder gc = new Geocoder(mContext, Locale.getDefault());
+            List<Address> addresses;
+            String address = "";
+            try {
+                addresses = gc.getFromLocation(curEvent.getLatitude(), curEvent.getLongtitude(),1);
+                if (addresses != null && addresses.size() > 0) {
+                    address = addresses.get(0).getAddressLine(0);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return address;
+        }
+        @Override
+        protected void onPostExecute(String address) {
+            mAdressTv = (TextView) findViewById(R.id.event_info_address);
+            mAdressTv.setText(address);
+        }
+    }
+
 
     //Get the device dimensions and return width and height
     private int[] getDimensions() {
