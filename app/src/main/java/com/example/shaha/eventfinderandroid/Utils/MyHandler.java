@@ -27,7 +27,13 @@ public class MyHandler extends NotificationsHandler {
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
         String nhMessage = bundle.getString("message");
-        sendNotification(nhMessage);
+        //check what type of message we received
+        if(nhMessage == "event added"){
+            //
+            sendNotification(nhMessage);
+        }else if(nhMessage == "joined event"){
+
+        }
         if (MainActivity.isVisible) {
             MainActivity.mainActivity.ToastNotify(nhMessage);
         }
@@ -48,7 +54,7 @@ public class MyHandler extends NotificationsHandler {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Notification Hub Demo")
+                        .setContentTitle("Event was added")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setSound(defaultSoundUri)
