@@ -38,11 +38,13 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.google.maps.android:android-maps-utils:0.5+'
     compile 'com.microsoft.azure:azure-mobile-android:3.4.0@aar'
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5.1'
     testCompile 'junit:junit:4.12'
     compile 'com.microsoft.azure.android:azure-storage-android:0.8.0@aar'
     compile 'com.microsoft.azure:notification-hubs-android-sdk:0.4@aar'
     compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@aar'
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.2'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

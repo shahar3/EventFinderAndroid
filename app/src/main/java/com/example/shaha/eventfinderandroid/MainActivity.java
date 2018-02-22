@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean isVisible = false;
     private static final String TAG = "MainActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String storageConnectionString = "DefaultEndpointsProtocol=https;"
+            + "AccountName=eventfinder;"
+            + "AccountKey=K8Cnf6j1FGZR0WOEBwShFOvINvnwi+cQHpQv1EGJ6cMBN/Z5rcV42rfUq2XvXKHdv2usEdMpVcSpF4wi0ERauw==";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

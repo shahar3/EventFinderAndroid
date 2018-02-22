@@ -90,6 +90,9 @@ public class EventInfoPopUpActivity extends FragmentActivity {
     }
 
     private void openChat() {
+        Intent intent = new Intent(mContext, ChatActivity.class);
+        intent.putExtra("Event", curEvent);
+        startActivity(intent);
     }
 
     private void getAttendings() {
@@ -227,7 +230,6 @@ public class EventInfoPopUpActivity extends FragmentActivity {
             mAdressTv.setText(address);
         }
     }
-
 
     //Get the device dimensions and return width and height
     private int[] getDimensions() {

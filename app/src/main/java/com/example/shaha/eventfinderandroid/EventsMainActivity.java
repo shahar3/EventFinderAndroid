@@ -23,26 +23,26 @@ public class EventsMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_main);
         //set the pageViewer with the pageAdapter and the tabLayout
-        EventsPagerAdapter mPagerAdapter = new EventsPagerAdapter(getSupportFragmentManager(),this);
-        ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
+        EventsPagerAdapter mPagerAdapter = new EventsPagerAdapter(getSupportFragmentManager(), this);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(mPagerAdapter);
-        TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         mContext = getBaseContext();
         Intent i = getIntent();
-        userId = i.getIntExtra("userId",0);
+        userId = i.getIntExtra("userId", 0);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.open_sign_out_menu:
                 openPopupMenu();
                 return true;
@@ -53,12 +53,12 @@ public class EventsMainActivity extends AppCompatActivity {
 
     private void openPopupMenu() { // TODO why do we need this func? we have options item selected
         View menuItem = findViewById(R.id.open_sign_out_menu);
-        PopupMenu popupMenu = new PopupMenu(this,menuItem);
-        popupMenu.getMenuInflater().inflate(R.menu.sign_out_menu,popupMenu.getMenu());
+        PopupMenu popupMenu = new PopupMenu(this, menuItem);
+        popupMenu.getMenuInflater().inflate(R.menu.sign_out_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.sign_out_item:
                         //go back to the main login screen
                         Intent intent = new Intent(mContext, MainActivity.class);
