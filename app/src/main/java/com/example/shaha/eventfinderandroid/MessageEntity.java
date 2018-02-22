@@ -2,6 +2,9 @@ package com.example.shaha.eventfinderandroid;
 
 import com.microsoft.azure.storage.table.TableServiceEntity;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 /**
  * Created by shaha on 22/02/2018.
  */
@@ -15,9 +18,11 @@ public class MessageEntity extends TableServiceEntity {
         //the default constructor
     }
 
-    public MessageEntity(int eventId, String eventName) {
-        this.partitionKey = String.valueOf(eventId);
-        this.rowKey = eventName + "_" + timeStamp;
+    public MessageEntity(int eventId, String eventType) {
+        this.partitionKey =eventType +"_"+ String.valueOf(eventId);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Long time = new Timestamp(Long.MAX_VALUE).getTime() - now.getTime();
+        this.rowKey = String.valueOf(time);
     }
 
     public String getMessage() {

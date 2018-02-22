@@ -103,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
         String msg = msgText.getText().toString();
         if (msg != null) {
             msgText.setText("");
-            MessageEntity messageEntity = new MessageEntity(curEvent.getEventID(), curEvent.getEventName());
+            MessageEntity messageEntity = new MessageEntity(curEvent.getEventID(),curEvent.getType().toString());
             messageEntity.setMessage(msg);
             messageEntity.setUser("Unknown");
             if (tableIsReady) {
@@ -152,8 +152,9 @@ public class ChatActivity extends AppCompatActivity {
     public void retrieveMessages() {
         // Retrieve all entities in a partition.
         // Create a filter condition where the partition key is "Smith".
+        String partitionKey = curEvent.getType().toString() + "_" + String.valueOf(curEvent.getEventID());
         String partitionFilter = TableQuery.generateFilterCondition(
-                "PartitionKey", TableQuery.QueryComparisons.EQUAL, String.valueOf(curEvent.getEventID()));
+                "PartitionKey", TableQuery.QueryComparisons.EQUAL,partitionKey);
 
         // Specify a partition query, using "Smith" as the partition key filter.
         TableQuery<MessageEntity> partitionQuery = TableQuery.from(
