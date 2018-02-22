@@ -124,9 +124,10 @@ public class EventInfoPopUpActivity extends FragmentActivity {
 
     private void DownloadImage() {
         imageView = (ImageView) findViewById(R.id.event_img);
-        final String imageName = curEvent.getEventName();
+        final int imageType = curEvent.getType().getValue();
+        final int imageID = curEvent.getEventID();
         imageStream = new ByteArrayOutputStream();
-        DownloadImageAsyncTask task = new DownloadImageAsyncTask(imageName);
+        DownloadImageAsyncTask task = new DownloadImageAsyncTask(imageType+"_"+imageID);
         task.execute(imageStream);
     }
 

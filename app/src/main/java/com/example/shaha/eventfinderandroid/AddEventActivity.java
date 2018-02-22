@@ -227,7 +227,6 @@ public class AddEventActivity extends AppCompatActivity {
         addEventFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadImage();
                 //upload to database
                 AddEventToDataBase();
             }
@@ -252,9 +251,8 @@ public class AddEventActivity extends AppCompatActivity {
         endTime = timeUntilEditText.getText().toString();
     }
 
-    private void UploadImage() {
-        String imageName = ((EditText) findViewById(R.id.add_event_event_name)).getText().toString();
-        UploadImageAsyncTask task = new UploadImageAsyncTask(imageName);
+    private void UploadImage(int eventID) {
+        UploadImageAsyncTask task = new UploadImageAsyncTask(eventID);
         task.execute(selectedImage);
     }
 
@@ -278,19 +276,20 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
-    private class AddEventAsyncTask extends AsyncTask<Void, Void, Boolean> {
+    private class AddEventAsyncTask extends AsyncTask<Void, Void, Integer> {
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean ans = InternetUtils.createEvent("description", eventName, startTime, endTime, latitude, longtitude, EventsMainActivity.getCurrentUser(), type);
+        protected Integer doInBackground(Void... voids) {
+            int ans = InternetUtils.createEvent("description", eventName, startTime, endTime, latitude, longtitude, EventsMainActivity.getCurrentUser(), type);
             return ans;
         }
 
         @Override
-        protected void onPostExecute(Boolean added) {
-            super.onPostExecute(added);
+        protected void onPostExecute(Integer eventID) {
+            super.onPostExecute(eventID);
             //handle result
-            if (added) {
+            if (eventID!=-1) {
+                UploadImage(eventID);
                 Toast.makeText(AddEventActivity.this, "Event was added successfully", Toast.LENGTH_SHORT).show();
                 finish();
                 //need to update list... trigger push notification
@@ -299,10 +298,10 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private class UploadImageAsyncTask extends AsyncTask<Uri, Void, Integer> {
-        String _imageName;
+        int _eventID;
 
-        UploadImageAsyncTask(String imageName) {
-            _imageName = imageName;
+        UploadImageAsyncTask(int eventID) {
+            _eventID = eventID;
         }
 
         @Override
@@ -310,7 +309,7 @@ public class AddEventActivity extends AppCompatActivity {
             try {
                 final InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                 final int imageLength = imageStream.available();
-                ImageManager.UploadImage(imageStream, imageLength, _imageName);
+                ImageManager.UploadImage(imageStream, imageLength, type + "_" + _eventID);
             } catch (Exception ex) {
                 //Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
             }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.shaha.eventfinderandroid.EventUser;
 import com.example.shaha.eventfinderandroid.MyEvent;
+import com.google.android.gms.games.event.EventEntity;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -308,8 +309,8 @@ public class InternetUtils {
     }
 
     //add event: Description, Name, StartTime, EndTime, Latitude, Longtitude, UserId, Type
-    public static boolean createEvent(String description, String name, String startTime, String endTime, Double latitude, Double longtitude, int userId, int type) {
-        boolean ans = false;
+    public static int createEvent(String description, String name, String startTime, String endTime, Double latitude, Double longtitude, int userId, int type) {
+        int ans = -1;
         try {
             URL url = createURl(baseUrl + "events");
             JSONObject jsonObject = createJSON(description, name, startTime, endTime, latitude, longtitude, userId, type);
@@ -320,9 +321,9 @@ public class InternetUtils {
             JSONObject jsonResponse = new JSONObject(resStr);
             String result = jsonResponse.getString("success");
             if (!result.equals("false")) {
-                ans = true;
-            } else {
-                ans = false;
+                JSONObject eventJson = (JSONObject) jsonResponse.getJSONObject("data");
+                int eventID = eventJson.getInt("ID");
+                ans = eventID;
             }
 
         } catch (Exception e) {
