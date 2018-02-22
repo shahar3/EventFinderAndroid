@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
+import com.example.shaha.eventfinderandroid.Adapters.EventsPagerAdapter;
 
 public class EventsMainActivity extends AppCompatActivity {
     Context mContext;

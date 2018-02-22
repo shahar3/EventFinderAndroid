@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by shaha on 08/01/2018.
  */
 
-public class MyEvent implements Parcelable{
+public class MyEvent implements Parcelable {
     private String eventName;
     private String startTime;
     private String endTime;
@@ -23,7 +23,7 @@ public class MyEvent implements Parcelable{
     private EventType type;
     private int eventID;
 
-    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude, int eventID, int type){
+    public MyEvent(String eventName, String startTime, String endTime, String description, int userId, double longtitude, double latitude, int eventID, int type) {
         this.setEventName(eventName);
         this.setStartTime(startTime);
         this.setEndTime(endTime);
@@ -32,7 +32,7 @@ public class MyEvent implements Parcelable{
         this.setLongtitude(longtitude);
         this.setLatitude(latitude);
         this.setEventID(eventID);
-        this.type = EventType.values()[type];
+        this.type = EventType.values()[type - 1];
     }
 
 
@@ -46,7 +46,7 @@ public class MyEvent implements Parcelable{
         endTime = in.readString();
         //type = EventType.values()[in.readInt()]; //get the enum type
         eventID = in.readInt();
-        type = EventType.values()[in.readInt()];
+        type = EventType.values()[in.readInt() - 1];
     }
 
     public static final Creator<MyEvent> CREATOR = new Creator<MyEvent>() {

@@ -1,8 +1,6 @@
 package com.example.shaha.eventfinderandroid.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,16 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.shaha.eventfinderandroid.EventAdapter;
+import com.example.shaha.eventfinderandroid.Adapters.EventAdapter;
 import com.example.shaha.eventfinderandroid.EventInfoPopUpActivity;
 import com.example.shaha.eventfinderandroid.MyEvent;
 import com.example.shaha.eventfinderandroid.R;
 import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

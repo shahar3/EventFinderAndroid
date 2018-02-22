@@ -1,11 +1,15 @@
-package com.example.shaha.eventfinderandroid;
+package com.example.shaha.eventfinderandroid.Adapters;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.shaha.eventfinderandroid.EventUser;
+import com.example.shaha.eventfinderandroid.R;
 
 import java.util.List;
 
@@ -13,8 +17,8 @@ import java.util.List;
  * Created by moran on 14/02/2018.
  */
 
-public class UserAdapter extends ArrayAdapter<EventAttending> {
-    public UserAdapter(Context context, List<EventAttending> attendings) {
+public class UserAdapter extends ArrayAdapter<EventUser> {
+    public UserAdapter(Context context, List<EventUser> attendings) {
         super(context, 0, attendings);
     }
 
@@ -28,7 +32,9 @@ public class UserAdapter extends ArrayAdapter<EventAttending> {
                     R.layout.user_list_item, parent, false);
         }
 
-        EventAttending curUser = getItem(position);
+        //Get current user
+        EventUser curUser = getItem(position);
+
         String fullName = curUser.getFullName();
         String phoneNumber = curUser.getPhoneNumber();
         TextView fullNameTv = (TextView) listItemView.findViewById(R.id.full_name_text_view);

@@ -1,4 +1,4 @@
-package com.example.shaha.eventfinderandroid;
+package com.example.shaha.eventfinderandroid.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +8,7 @@ import android.content.Context;
 import com.example.shaha.eventfinderandroid.Fragments.LocalEventsFragment;
 import com.example.shaha.eventfinderandroid.Fragments.PersonalAreaFragment;
 import com.example.shaha.eventfinderandroid.Fragments.UpcomingEventsFragment;
+import com.example.shaha.eventfinderandroid.R;
 import com.example.shaha.eventfinderandroid.Utils.MapUtils;
 
 /**

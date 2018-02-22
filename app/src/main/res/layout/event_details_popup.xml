@@ -18,8 +18,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/event_info_join_button"
-            />
+            android:text="@string/event_info_join_button" />
+
+        <ImageButton
+            android:id="@+id/event_info_chat_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_chat_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -33,11 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event Address: "
-                android:textColor="@color/event_details"/>
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/event_info_address"
@@ -57,8 +65,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/event_details"
-                android:text="Attending: " />
+                android:text="Attending: "
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/event_info_attendings_count"
@@ -72,8 +81,9 @@
         android:id="@+id/event_info_header_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_above="@+id/details_layout">
+        android:layout_above="@+id/details_layout"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/event_info_event_name_tv"
@@ -82,22 +92,21 @@
             android:layout_height="wrap_content"
             android:text="Event Name" />
 
-        <ScrollView
-            android:id="@+id/event_attendings_scroll_view"
+        <ImageView
+            android:id="@+id/event_img"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/amu_bubble_shadow" />
+
+        <ListView
+            android:id="@+id/event_info_attendings_list_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-        </ScrollView>
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+        </ListView>
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/event_img"
-        android:layout_width="500px"
-        android:layout_height="500px"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        app:srcCompat="@drawable/amu_bubble_shadow" />
 
 </RelativeLayout>

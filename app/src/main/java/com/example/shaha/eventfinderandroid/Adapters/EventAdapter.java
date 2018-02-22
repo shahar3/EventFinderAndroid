@@ -1,4 +1,4 @@
-package com.example.shaha.eventfinderandroid;
+package com.example.shaha.eventfinderandroid.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.shaha.eventfinderandroid.MyEvent;
+import com.example.shaha.eventfinderandroid.R;
 
 import java.util.List;
 

@@ -1,14 +1,8 @@
 package com.example.shaha.eventfinderandroid.Utils;
 
-import android.content.Context;
-import android.content.Entity;
-import android.util.EventLog;
-import android.util.EventLogTags;
 import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.example.shaha.eventfinderandroid.EventAttending;
+import com.example.shaha.eventfinderandroid.EventUser;
 import com.example.shaha.eventfinderandroid.MyEvent;
 
 import org.apache.http.HttpEntity;
@@ -23,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,10 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by shaha on 08/01/2018.
@@ -91,11 +81,12 @@ public class InternetUtils {
             return events;
         }
     }
-    public static List<EventAttending> getEventAttendings(int eventID) {
-        List<EventAttending> attendings = new ArrayList() {
+
+    public static List<EventUser> getEventAttendings(int eventID) {
+        List<EventUser> attendings = new ArrayList() {
         };
         try {
-            URL url = createURl(baseUrl + "events/" + eventID+ "/attendings");
+            URL url = createURl(baseUrl + "events/" + eventID + "/attendings");
             String res = makeGetRequest(url);
 
             //transform into a json object
@@ -110,8 +101,8 @@ public class InternetUtils {
         }
     }
 
-    private static List<EventAttending> extractAttendings(JSONObject jsonObject) {
-        List<EventAttending> attendings = new ArrayList<>();
+    private static List<EventUser> extractAttendings(JSONObject jsonObject) {
+        List<EventUser> attendings = new ArrayList<>();
         try {
             JSONArray usersJson = jsonObject.getJSONArray("data");
 
@@ -123,7 +114,7 @@ public class InternetUtils {
                 String lastName = userJson.getString("LastName");
                 String phoneNumber = userJson.getString("PhoneNumber");
 
-                EventAttending attending = new EventAttending(userID,firstName,lastName,phoneNumber);
+                EventUser attending = new EventUser("", userID, phoneNumber, firstName + " " + lastName);
                 attendings.add(attending);
             }
         } catch (JSONException e) {
@@ -328,9 +319,9 @@ public class InternetUtils {
             //handle response
             JSONObject jsonResponse = new JSONObject(resStr);
             String result = jsonResponse.getString("success");
-            if(!result.equals("false")){
+            if (!result.equals("false")) {
                 ans = true;
-            }else{
+            } else {
                 ans = false;
             }
 

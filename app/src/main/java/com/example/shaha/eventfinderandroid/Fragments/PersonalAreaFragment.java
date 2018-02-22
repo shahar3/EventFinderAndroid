@@ -2,7 +2,6 @@ package com.example.shaha.eventfinderandroid.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.shaha.eventfinderandroid.AddEventActivity;
-import com.example.shaha.eventfinderandroid.EventAdapter;
+import com.example.shaha.eventfinderandroid.Adapters.EventAdapter;
 import com.example.shaha.eventfinderandroid.EventInfoPopUpActivity;
 import com.example.shaha.eventfinderandroid.EventsMainActivity;
 import com.example.shaha.eventfinderandroid.MyEvent;
