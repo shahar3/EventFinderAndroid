@@ -175,8 +175,9 @@ public class ChatActivity extends AppCompatActivity {
         // Loop through the results, displaying information about the entity.
         for (MessageEntity entity : table.execute(partitionQuery)) {
             //create Entity
-            messages.add(new EventMessage(entity.getMessage(), entity.getUser()));
+            messages.add(0, new EventMessage(entity.getMessage(), entity.getUser()));
         }
+
     }
 
     private class RetrieveMessagesTask extends AsyncTask<Void, Void, Void> {
