@@ -9,9 +9,13 @@ import com.microsoft.azure.storage.table.TableServiceEntity;
 public class DeviceEntity extends TableServiceEntity {
     private String deviceId;
 
+    public DeviceEntity() {
+
+    }
+
     public DeviceEntity(String deviceId) {
         this.partitionKey = deviceId;
-        this.rowKey = deviceId + "_" + timeStamp;
+        this.rowKey = deviceId;
         this.deviceId = deviceId;
     }
 
