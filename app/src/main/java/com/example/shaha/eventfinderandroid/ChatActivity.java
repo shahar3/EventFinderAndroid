@@ -2,6 +2,7 @@ package com.example.shaha.eventfinderandroid;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,9 @@ public class ChatActivity extends AppCompatActivity {
     private static boolean tableIsReady = false;
     private ListView msgListView;
     private List<EventMessage> messages = new ArrayList<>();
+    private static boolean isVisible = false;
+    private Handler mHandler = new Handler();
+    private java.lang.Runnable mRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +74,15 @@ public class ChatActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             tableIsReady = true;
 
-            RetrieveMessagesTask task = new RetrieveMessagesTask();
-            task.execute();
+            //run the thread
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RetrieveMessagesTask task = new RetrieveMessagesTask();
+                    task.execute();
+                    mHandler.postDelayed(this, 1000);
+                }
+            }, 1000);
         }
     }
 
@@ -103,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
         String msg = msgText.getText().toString();
         if (msg != null) {
             msgText.setText("");
-            MessageEntity messageEntity = new MessageEntity(curEvent.getEventID(),curEvent.getType().toString());
+            MessageEntity messageEntity = new MessageEntity(curEvent.getEventID(), curEvent.getType().toString());
             messageEntity.setMessage(msg);
             messageEntity.setUser("Unknown");
             if (tableIsReady) {
@@ -154,12 +165,13 @@ public class ChatActivity extends AppCompatActivity {
         // Create a filter condition where the partition key is "Smith".
         String partitionKey = curEvent.getType().toString() + "_" + String.valueOf(curEvent.getEventID());
         String partitionFilter = TableQuery.generateFilterCondition(
-                "PartitionKey", TableQuery.QueryComparisons.EQUAL,partitionKey);
+                "PartitionKey", TableQuery.QueryComparisons.EQUAL, partitionKey);
 
         // Specify a partition query, using "Smith" as the partition key filter.
         TableQuery<MessageEntity> partitionQuery = TableQuery.from(
                 MessageEntity.class).where(partitionFilter);
 
+        messages.clear();
         // Loop through the results, displaying information about the entity.
         for (MessageEntity entity : table.execute(partitionQuery)) {
             //create Entity
@@ -181,5 +193,31 @@ public class ChatActivity extends AppCompatActivity {
             MessageAdapter mAdapter = new MessageAdapter(ChatActivity.this, messages);
             msgListView.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+        mHandler.removeCallbacks(mRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isVisible = false;
+        mHandler.removeCallbacks(mRunnable);
     }
 }
