@@ -12,7 +12,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
+import com.example.shaha.eventfinderandroid.Login;
 import com.example.shaha.eventfinderandroid.MainActivity;
 import com.example.shaha.eventfinderandroid.R;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
@@ -27,6 +29,7 @@ public class MyHandler extends NotificationsHandler {
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
         String nhMessage = bundle.getString("message");
+        MainActivity.mainActivity.ToastNotify(nhMessage);
         //check what type of message we received
         if(nhMessage == "event added"){
             //
