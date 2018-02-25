@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.example.shaha.eventfinderandroid.EventsMainActivity;
+import com.example.shaha.eventfinderandroid.Fragments.UpcomingEventsFragment;
 import com.example.shaha.eventfinderandroid.Login;
 import com.example.shaha.eventfinderandroid.MainActivity;
 import com.example.shaha.eventfinderandroid.R;
@@ -29,17 +31,26 @@ public class MyHandler extends NotificationsHandler {
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
         String nhMessage = bundle.getString("message");
-        MainActivity.mainActivity.ToastNotify(nhMessage);
         //check what type of message we received
-        if(nhMessage == "event added"){
-            //
-            sendNotification(nhMessage);
-        }else if(nhMessage == "joined event"){
-
+        if (nhMessage.contains("event added")) {
+            //refresh the event list in the upcomingFragment
+            if (UpcomingEventsFragment.isVisible) {
+                UpcomingEventsFragment.updateList();
+                MainActivity.mainActivity.ToastNotify("An event was added");
+            }
+            sendNotification("An event was added");
+        } else if (nhMessage.contains("joined event")) {
+            String[] splits = nhMessage.split(" ");
+            String eventIdStr = splits[3];
+            String userIdStr = splits[5];
+            int userId = Integer.parseInt(userIdStr);
+            if (userId == EventsMainActivity.getCurrentUser()) {
+                MainActivity.mainActivity.ToastNotify("Someone joined your event \neventID: " + eventIdStr);
+            }
         }
-        if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(nhMessage);
-        }
+//        if (MainActivity.isVisible) {
+//            MainActivity.mainActivity.ToastNotify(nhMessage);
+//        }
     }
 
     private void sendNotification(String msg) {

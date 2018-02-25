@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.shaha.eventfinderandroid.Adapters.EventAdapter;
 import com.example.shaha.eventfinderandroid.EventInfoPopUpActivity;
+import com.example.shaha.eventfinderandroid.EventsMainActivity;
 import com.example.shaha.eventfinderandroid.MyEvent;
 import com.example.shaha.eventfinderandroid.R;
 import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
@@ -21,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpcomingEventsFragment extends Fragment {
-    private EventAdapter mAdapter;
+    public static boolean isVisible = false;
+    private static EventAdapter mAdapter;
 
     public UpcomingEventsFragment() {
         // Required empty public constructor
@@ -43,10 +45,12 @@ public class UpcomingEventsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        isVisible = true;
+
         //initialize the list view
         List<MyEvent> events = new ArrayList<>();
-        ListView eventsListView = (ListView)view.findViewById(R.id.upcoming_events_list_view);
-        mAdapter = new EventAdapter(this.getContext(),events);
+        ListView eventsListView = (ListView) view.findViewById(R.id.upcoming_events_list_view);
+        mAdapter = new EventAdapter(this.getContext(), events);
         eventsListView.setAdapter(mAdapter);
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,14 +67,23 @@ public class UpcomingEventsFragment extends Fragment {
         task.execute();
     }
 
-    private class EventsAsyncTask extends AsyncTask<Void, Void,List<MyEvent>> {
+    public static void updateList() {
+        EventsAsyncTask task = new EventsAsyncTask();
+        task.execute();
+    }
+
+
+    private static class EventsAsyncTask extends AsyncTask<Void, Void, List<MyEvent>> {
 
         @Override
         protected List<MyEvent> doInBackground(Void... voids) {
             //call the getAllEvents function
-            List<MyEvent> events = InternetUtils.getAllEvents();
+            List<MyEvent> allEvents = InternetUtils.getAllEvents();
+            List<MyEvent> myEvents = InternetUtils.getUserEvents(EventsMainActivity.getCurrentUser());
 
-            return events;
+            allEvents.removeAll(myEvents);
+
+            return allEvents;
         }
 
         @Override
@@ -80,5 +93,23 @@ public class UpcomingEventsFragment extends Fragment {
             mAdapter.addAll(events);
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isVisible = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        isVisible = false;
     }
 }

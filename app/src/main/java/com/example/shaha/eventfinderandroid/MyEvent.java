@@ -152,4 +152,9 @@ public class MyEvent implements Parcelable {
         parcel.writeInt(type.getValue());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        MyEvent other = (MyEvent) obj;
+        return (this.eventID == other.eventID);
+    }
 }

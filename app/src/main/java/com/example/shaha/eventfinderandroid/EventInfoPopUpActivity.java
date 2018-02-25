@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shaha.eventfinderandroid.Adapters.UserAdapter;
+import com.example.shaha.eventfinderandroid.Fragments.UpcomingEventsFragment;
 import com.example.shaha.eventfinderandroid.Utils.ImageManager;
 import com.example.shaha.eventfinderandroid.Utils.InternetUtils;
 
@@ -191,6 +192,7 @@ public class EventInfoPopUpActivity extends FragmentActivity {
             //handle result
             if (isJoin) {
                 Toast.makeText(EventInfoPopUpActivity.this, "Join event successfully", Toast.LENGTH_SHORT).show();
+                UpcomingEventsFragment.updateList();
                 finish();
             }
         }
