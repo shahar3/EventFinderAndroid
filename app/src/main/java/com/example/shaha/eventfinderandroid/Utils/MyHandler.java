@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -18,8 +19,11 @@ import com.example.shaha.eventfinderandroid.EventsMainActivity;
 import com.example.shaha.eventfinderandroid.Fragments.UpcomingEventsFragment;
 import com.example.shaha.eventfinderandroid.Login;
 import com.example.shaha.eventfinderandroid.MainActivity;
+import com.example.shaha.eventfinderandroid.MyEvent;
 import com.example.shaha.eventfinderandroid.R;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
+
+import java.util.List;
 
 public class MyHandler extends NotificationsHandler {
     public static final int NOTIFICATION_ID = 1;
@@ -42,15 +46,37 @@ public class MyHandler extends NotificationsHandler {
         } else if (nhMessage.contains("joined event")) {
             String[] splits = nhMessage.split(" ");
             String eventIdStr = splits[3];
-            String userIdStr = splits[5];
-            int userId = Integer.parseInt(userIdStr);
-            if (userId == EventsMainActivity.getCurrentUser()) {
-                MainActivity.mainActivity.ToastNotify("Someone joined your event \neventID: " + eventIdStr);
-            }
+            int eventId = Integer.parseInt(eventIdStr);
+
         }
 //        if (MainActivity.isVisible) {
 //            MainActivity.mainActivity.ToastNotify(nhMessage);
 //        }
+    }
+
+    private class getEventTask extends AsyncTask<Integer, Void, MyEvent> {
+        @Override
+        protected MyEvent doInBackground(Integer... integers) {
+            int eventId = integers[0];
+            MyEvent myEvent = null;
+            List<MyEvent> events = InternetUtils.getAllEvents();
+            for (MyEvent event : events
+                    ) {
+                if (eventId == event.getEventID()) {
+                    myEvent = event;
+                }
+            }
+            return myEvent;
+        }
+
+        @Override
+        protected void onPostExecute(MyEvent myEvent) {
+            super.onPostExecute(myEvent);
+            int userId = myEvent.getUserId();
+            if (EventsMainActivity.getCurrentUser() == userId) {
+                MainActivity.mainActivity.ToastNotify("Someone joined your event \nevent: " + myEvent.getEventName());
+            }
+        }
     }
 
     private void sendNotification(String msg) {
