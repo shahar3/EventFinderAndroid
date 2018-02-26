@@ -41,7 +41,6 @@ public class Login extends AppCompatActivity {
         //check if the user exist
         String email = emailET.getText().toString();
         String password = passwordET.getText().toString();
-        Toast.makeText(this, email + " " + password, Toast.LENGTH_SHORT).show();
 
         //check if user exist
         LoginAsyncTask task = new LoginAsyncTask();

@@ -47,7 +47,8 @@ public class MyHandler extends NotificationsHandler {
             String[] splits = nhMessage.split(" ");
             String eventIdStr = splits[3];
             int eventId = Integer.parseInt(eventIdStr);
-
+            getEventTask task = new getEventTask();
+            task.execute(eventId);
         }
 //        if (MainActivity.isVisible) {
 //            MainActivity.mainActivity.ToastNotify(nhMessage);
